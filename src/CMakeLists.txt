@@ -189,7 +189,32 @@ target_link_libraries(
         Qt${QT_VERSION_MAJOR}::Widgets
         QtColorWidgets
 )
-if (UNIX)
+if (UNIX AND NOT APPLE)
+find_package(PkgConfig)
+if (PkgConfig_FOUND)
+    pkg_check_modules(X11 x11)
+endif()
+if (X11_FOUND)
+    target_compile_definitions(flameshot PRIVATE USE_X11_SHORTCUT=1)
+    target_sources(flameshot PRIVATE
+        core/x11shortcutfilter.h
+        core/x11shortcutfilter.cpp
+    )
+    target_include_directories(flameshot PRIVATE ${X11_INCLUDE_DIRS})
+    target_link_libraries(
+            flameshot
+            Qt${QT_VERSION_MAJOR}::DBus
+            ${X11_LIBRARIES}
+    )
+    message(STATUS "X11 global shortcut support enabled")
+else()
+    target_link_libraries(
+            flameshot
+            Qt${QT_VERSION_MAJOR}::DBus
+    )
+    message(STATUS "X11 global shortcut support disabled (missing x11)")
+endif()
+elseif(UNIX)
 target_link_libraries(
         flameshot
         Qt${QT_VERSION_MAJOR}::DBus
