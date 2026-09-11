@@ -103,6 +103,11 @@ instance of the program in the background without taking actions.
 If your desktop environment provides tray area, a tray icon will also
 appear in the tray for users to perform configuration and management.
 
+On X11, interactive capture dims the entire desktop and lets you select a region
+across monitors without choosing a monitor first.
+Keep `captureActiveMonitor=false` to use this behavior; enabling it restricts
+capture to the monitor under the pointer.
+
 Example commands:
 
 - Capture with GUI:
